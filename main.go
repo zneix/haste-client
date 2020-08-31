@@ -19,7 +19,8 @@ const (
 
 var (
 	printVersion = flag.Bool("v", false, fmt.Sprintf("Shows program version"))
-	hasteURL     = flag.String("d", "https://haste.zneix.eu", fmt.Sprintf("Hastebin server's URL to which stdin should be uploaded."))
+	returnRaw    = flag.Bool("r", false, fmt.Sprintf("Returns link to raw content"))
+	hasteURL     = flag.String("d", "https://haste.zneix.eu", fmt.Sprintf("Hastebin server's URL to which data will be uploaded."))
 
 	apiRoute   = "/documents"
 	httpClient = &http.Client{
@@ -64,7 +65,7 @@ func uploadToHaste(url string, data string) {
 		Key string `json:"key,omitempty"`
 	}
 
-	req, err := http.NewRequest("POST", fmt.Sprintf("%s%s", *hasteURL, apiRoute), bytes.NewBuffer([]byte(data)))
+	req, err := http.NewRequest("POST", *hasteURL+apiRoute, bytes.NewBuffer([]byte(data)))
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -97,6 +98,12 @@ func uploadToHaste(url string, data string) {
 		return
 	}
 
-	fmt.Println(fmt.Sprintf("%s/%s", url, jsonResponse.Key))
+	var finalURL = url
+	if *returnRaw {
+		finalURL += "/raw"
+	}
+	finalURL += "/" + jsonResponse.Key
+
+	fmt.Println(finalURL)
 	return
 }
