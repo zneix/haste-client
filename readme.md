@@ -58,8 +58,7 @@ ren haste-client.exe haste.exe
 Download [Go 1.15](https://golang.org/doc/install?download=go1.15.linux-amd64.tar.gz)
 
 ```bash
-go get github.com/zneix/github
-make build
+go get github.com/zneix/haste-client
 sudo cp ~/go/bin/haste-client /usr/local/bin/haste
 ```
 
