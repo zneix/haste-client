@@ -28,7 +28,11 @@ Shows Program version and exits
 
 `-d string`
 
-Changes upload destination, can be another haste server, requires schema prefix (default: https://haste.zneix.eu).  
+Changes upload destination, can be a URL another haste server (default: https://haste.zneix.eu).  
+
+`-r`
+
+Returns a link to raw paste (text only) instead
 
 # Easy Installation
 
