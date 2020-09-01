@@ -36,7 +36,7 @@ Returns a link to raw paste (text only) instead
 
 # Easy Installation
 
-Download binary the latest release from [releases page](https://github.com/zneix/haste-client/releases/tag/1.0).  
+Download binary the latest release from [releases page](https://github.com/zneix/haste-client/releases/latest).  
 Version without extension if for Linux, and `.exe` is for Windows.  
 
 To make sure you can use this tool globally in command line, make sure to put it into your PATH Environment Variable:  
