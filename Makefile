@@ -1,4 +1,4 @@
-DESTDIR ?= "/usr/local"
+DESTDIR ?= /usr/local
 install: build
 	echo ${DESTDIR}
 	install -Dm755 haste ${DESTDIR}/bin/haste
@@ -6,8 +6,7 @@ install: build
 build: haste
 
 haste: main.go
-	go build
-	mv ./haste-client ./haste
+	go build -o haste
 
 run: build
 	./haste
