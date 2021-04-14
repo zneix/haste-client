@@ -3,7 +3,7 @@ default: build
 
 install: build
 	echo ${DESTDIR}
-	install -Dm755 haste ${DESTDIR}/bin/haste
+	install -m 755 -t "${DESTDIR}/bin" -D haste
 
 build: haste
 
