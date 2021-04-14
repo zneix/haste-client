@@ -1,4 +1,6 @@
-DESTDIR ?= /usr/local
+DESTDIR ?= "/usr/local"
+default: build
+
 install: build
 	echo ${DESTDIR}
 	install -Dm755 haste ${DESTDIR}/bin/haste
