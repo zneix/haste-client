@@ -35,6 +35,24 @@ func main() {
 		return
 	}
 
+	if len(os.Args) == 1 {
+		readStdin()
+	} else {
+		for _, file := range(os.Args[1:]) {
+			if file == "-" {
+				readStdin()
+			} else {
+				data, err := ioutil.ReadFile(file)
+				if err != nil {
+					log.Fatalf("%s: Failed reading data from file: %s\n", os.Args[0], err)
+				}
+				uploadToHaste(*hasteURL, string(data))
+			}
+		}
+	}
+}
+
+func readStdin() {
 	stdinBuffer, _ := ioutil.ReadAll(os.Stdin)
 	content := string(stdinBuffer)
 	uploadToHaste(*hasteURL, content)
