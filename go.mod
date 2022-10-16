@@ -1,3 +1,3 @@
 module github.com/zneix/haste-client
 
-go 1.15
+go 1.19
