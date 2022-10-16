@@ -64,7 +64,7 @@ func uploadToHaste(url, data string) {
 		Key string `json:"key,omitempty"`
 	}
 
-	req, err := http.NewRequest("POST", *hasteURL+apiRoute, bytes.NewBuffer([]byte(data)))
+	req, err := http.NewRequest("POST", *hasteURL+apiRoute, bytes.NewBufferString(data))
 	if err != nil {
 		log.Fatal("Error while creating HTTP request:", err)
 		return
@@ -91,8 +91,8 @@ func uploadToHaste(url, data string) {
 		return
 	}
 
-	var jsonResponse HasteResponseData
-	if err := json.Unmarshal(body, &jsonResponse); err != nil {
+	jsonResponse := new(HasteResponseData)
+	if err := json.Unmarshal(body, jsonResponse); err != nil {
 		log.Fatalln("Error while unmarshaling JSON response:", err)
 		return
 	}
@@ -104,5 +104,4 @@ func uploadToHaste(url, data string) {
 	finalURL += "/" + jsonResponse.Key
 
 	fmt.Println(finalURL)
-	return
 }
