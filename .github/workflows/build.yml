@@ -1,0 +1,41 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        go: [1.18, 1.19]
+
+    steps:
+      - name: Set up Go
+        uses: actions/setup-go@v3.3.0
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Checkout into project's git directory
+        uses: actions/checkout@v3.1.0
+
+      - name: Get dependencies
+        run: go get -v -t -d ./...
+
+      - name: Build
+        # TODO: enable working-directory and tweak path (prepend ../../) after restructurizing the project
+        run: go build -ldflags="-s -w" -v -o build/haste
+        #working-directory: cmd/client
+
+      - name: Test
+        run: go test -v ./...
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.0
+        with:
+          name: haste-go${{ matrix.go }}
+          path: build/haste
