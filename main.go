@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -43,7 +43,7 @@ func main() {
 			if file == "-" {
 				readStdin()
 			} else {
-				data, err := ioutil.ReadFile(file)
+				data, err := os.ReadFile(file)
 				if err != nil {
 					log.Fatalf("%s: Failed reading data from file: %s\n", os.Args[0], err)
 				}
@@ -54,7 +54,7 @@ func main() {
 }
 
 func readStdin() {
-	stdinBuffer, _ := ioutil.ReadAll(os.Stdin)
+	stdinBuffer, _ := io.ReadAll(os.Stdin)
 	content := string(stdinBuffer)
 	uploadToHaste(*hasteURL, content)
 }
@@ -85,7 +85,7 @@ func uploadToHaste(url, data string) {
 	}
 
 	// Error out if the invite isn't found or something else went wrong with the request
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Fatalln("Error while reading response:", err)
 		return
