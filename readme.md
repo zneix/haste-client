@@ -1,6 +1,6 @@
 # Haste-Client
 
-This is a rewritten Haste-Client in Go which is meant to be a little utility that uploads code via command line from pipe.
+This is a rewritten Haste-Client in Go which is meant to be a little utility that uploads code via command line from pipe or by providing names of files to upload.
 Available for both Windows and Linux.
 
 
@@ -11,8 +11,11 @@ Examples:
 `echo Sample Text | haste`  
 > https://haste.zneix.eu/nibazahidu
 
-`cat veryLongScript.js | haste | xsel`
+`haste veryLongScript.js | xsel`
 > *copies https://haste.zneix.eu/ibadomuvaq to clipboard*
+
+`echo "Hello World" | haste message.txt - main.cpp`
+> *uploads (separetly): contents of message.txt file, standard input from echo command, contents of main.cpp file
 
 <br>
 
