@@ -1,0 +1,70 @@
+linters-settings:
+  govet:
+    check-shadowing: true
+  revive:
+    min-confidence: 0
+  gocyclo:
+    min-complexity: 25
+  maligned:
+    suggest-new: true
+  goconst:
+    min-len: 2
+    min-occurrences: 4
+  gocognit:
+    min-complexity: 35
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - unnamedResult
+      - commentedOutCode
+      - exitAfterDefer # TODO: Investigate re-enabling this one
+      - filepathJoin   # Disabled due to FPs in config package
+      - appendCombine  # After a longer thought I decided I don't like this, makes code less readable
+  funlen:
+    lines: 200
+    statements: 50
+
+linters:
+  disable-all: true
+  enable:
+    - bodyclose
+    - depguard
+    - dogsled
+  # - dupl
+    - errcheck
+    - funlen
+    - goconst
+    - gocritic
+  # - gocyclo # same as with gocognit
+    - gofmt
+    - goimports
+    - revive
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
+    #- interfacer # archived by the owner
+  # - lll
+  # - misspell
+    - exportloopref
+    - staticcheck
+    - stylecheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
+    - gocognit
+  # - godox
+  # - maligned
+    - prealloc
+
+  # don't enable:
+  # - gochecknoglobals
+  # - nakedret
+  # - gochecknoinits

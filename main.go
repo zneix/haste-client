@@ -17,9 +17,9 @@ const (
 )
 
 var (
-	printVersion = flag.Bool("v", false, fmt.Sprintf("Shows program version"))
-	returnRaw    = flag.Bool("r", false, fmt.Sprintf("Returns link to raw content"))
-	hasteURL     = flag.String("d", "https://haste.zneix.eu", fmt.Sprintf("Hastebin server's URL to which data will be uploaded."))
+	printVersion = flag.Bool("v", false, "Shows program version")
+	returnRaw    = flag.Bool("r", false, "Returns link to raw content")
+	hasteURL     = flag.String("d", "https://haste.zneix.eu", "Hastebin server's URL to which data will be uploaded")
 
 	apiRoute   = "/documents"
 	httpClient = &http.Client{
@@ -28,17 +28,18 @@ var (
 )
 
 func main() {
-	//handle CLI arguments
+	// Handle CLI arguments
 	flag.Parse()
+
 	if *printVersion {
-		fmt.Println(fmt.Sprintf("Haste Client %s", version))
+		fmt.Printf("Haste Client %s\n", version)
 		return
 	}
 
 	if len(os.Args) == 1 {
 		readStdin()
 	} else {
-		for _, file := range(os.Args[1:]) {
+		for _, file := range os.Args[1:] {
 			if file == "-" {
 				readStdin()
 			} else {
@@ -58,42 +59,41 @@ func readStdin() {
 	uploadToHaste(*hasteURL, content)
 }
 
-func uploadToHaste(url string, data string) {
-
+func uploadToHaste(url, data string) {
 	type HasteResponseData struct {
 		Key string `json:"key,omitempty"`
 	}
 
 	req, err := http.NewRequest("POST", *hasteURL+apiRoute, bytes.NewBuffer([]byte(data)))
 	if err != nil {
-		log.Fatal("New Request error: " + err.Error())
+		log.Fatal("Error while creating HTTP request:", err)
 		return
 	}
 	req.Header.Set("User-Agent", fmt.Sprintf("haste-client/%s", version))
 
-	//send the request
+	// Send the request
 	resp, err := httpClient.Do(req)
 	if err != nil {
-		log.Fatal("Request Do error: " + err.Error())
+		log.Fatal("Error while performing the request:", err)
 		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode < http.StatusOK || resp.StatusCode > http.StatusMultipleChoices {
-		log.Fatal(fmt.Sprintf("Error while uploading data: %d", resp.StatusCode))
+		log.Fatalln("Failed to upload data, server responded with", resp.StatusCode)
 		return
 	}
 
-	//error out if the invite isn't found or something else went wrong with the request
+	// Error out if the invite isn't found or something else went wrong with the request
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(fmt.Sprintf("Error while reading response: %s", err.Error()))
+		log.Fatalln("Error while reading response:", err)
 		return
 	}
 
 	var jsonResponse HasteResponseData
 	if err := json.Unmarshal(body, &jsonResponse); err != nil {
-		log.Fatal(fmt.Sprintf("Error while unmarshaling JSON response: %s", err.Error()))
+		log.Fatalln("Error while unmarshaling JSON response:", err)
 		return
 	}
 
