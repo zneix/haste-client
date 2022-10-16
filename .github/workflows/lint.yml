@@ -1,0 +1,35 @@
+name: Lint
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        go: [1.18, 1.19]
+
+    steps:
+      #- name: Set up Go
+        #uses: actions/setup-go@v3.3.0
+        #with:
+          #go-version: ${{ matrix.go }}
+
+      - name: Checkout into project's git directory
+        uses: actions/checkout@v3.1.0
+
+      - name: Lint the code (reviewdog)
+        uses: reviewdog/action-golangci-lint@v2.2.2
+        with:
+          fail_on_error: true
+          go_version: ${{ matrix.go }}
+          filter_mode: nofilter
+      #- name: Lint the code
+        #uses: golangci/golangci-lint-action@v3.2.0
+        #with:
+          #version: v1.29
