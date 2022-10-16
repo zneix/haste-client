@@ -15,10 +15,11 @@ jobs:
         go: [1.18, 1.19]
 
     steps:
-      - name: Set up Go
-        uses: actions/setup-go@v3.3.0
-        with:
-          go-version: ${{ matrix.go }}
+      # Required for golangci/golangci-lint-action (keeping it just in case I'd like to switch back)
+      #- name: Set up Go
+        #uses: actions/setup-go@v3.3.0
+        #with:
+          #go-version: ${{ matrix.go }}
 
       - name: Checkout into project's git directory
         uses: actions/checkout@v3.1.0
@@ -30,7 +31,7 @@ jobs:
           go_version: ${{ matrix.go }}
           filter_mode: nofilter
 
-      - name: Lint the code
-        uses: golangci/golangci-lint-action@v3.2.0
-        with:
-          version: v1.50
+      #- name: Lint the code
+        #uses: golangci/golangci-lint-action@v3.2.0
+        #with:
+          #version: v1.50
