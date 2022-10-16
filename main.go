@@ -35,14 +35,24 @@ func main() {
 		return
 	}
 
-	//TODO: add support for text files from CLI args
-	//dirty hack from https://stackoverflow.com/a/41999124
-	stat, _ := os.Stdin.Stat()
-	if (stat.Mode() & os.ModeNamedPipe) == 0 {
-		fmt.Println("Haste Client can only be used in pipes!")
-		return
+	if len(os.Args) == 1 {
+		readStdin()
+	} else {
+		for _, file := range(os.Args[1:]) {
+			if file == "-" {
+				readStdin()
+			} else {
+				data, err := ioutil.ReadFile(file)
+				if err != nil {
+					log.Fatalf("%s: Failed reading data from file: %s\n", os.Args[0], err)
+				}
+				uploadToHaste(*hasteURL, string(data))
+			}
+		}
 	}
+}
 
+func readStdin() {
 	stdinBuffer, _ := ioutil.ReadAll(os.Stdin)
 	content := string(stdinBuffer)
 	uploadToHaste(*hasteURL, content)
