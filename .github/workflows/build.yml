@@ -8,11 +8,12 @@ on:
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     strategy:
       matrix:
         go: [1.18, 1.19]
+        os: [windows-latest, ubuntu-latest]
 
     steps:
       - name: Set up Go
@@ -37,5 +38,5 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v3.1.0
         with:
-          name: haste-go${{ matrix.go }}
+          name: haste-go${{ matrix.go }}-${{ matrix.os }}
           path: build/haste
