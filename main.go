@@ -13,34 +13,27 @@ import (
 	"time"
 )
 
-const (
-	version = "1.2"
-)
+const version = "1.2"
 
 var (
-	printVersion = flag.Bool("v", false, "Shows program version")
-	returnRaw    = flag.Bool("r", false, "Makes returned link point to raw content")
-	hasteURL     = flag.String("d", "https://haste.zneix.eu", "Hastebin server's URL to which data will be uploaded")
-
 	uploadAPIRoute = "/documents"
 	httpClient     = &http.Client{
 		Timeout: 10 * time.Second,
 	}
 )
 
-func readStdin() {
-	stdinBuffer, _ := io.ReadAll(os.Stdin)
-	content := string(stdinBuffer)
-	uploadToHaste(content)
+// readStdin wrapper for reading data from standard input and then uploading it
+func readStdin(hasteURL string) {
+	stdinBuffer, err := io.ReadAll(os.Stdin)
+	if err != nil {
+		log.Fatal("Error while processing stdin:", err)
+	}
+	uploadToHaste(hasteURL, string(stdinBuffer))
 }
 
-func uploadToHaste(data string) {
-	type HasteResponseData struct {
-		Key string `json:"key,omitempty"`
-	}
-
+func uploadToHaste(uploadURL, data string) {
 	// Parse the request URL and append the API route for uploading text
-	destination, err := url.ParseRequestURI(*hasteURL)
+	destination, err := url.ParseRequestURI(uploadURL)
 	if err != nil {
 		log.Fatal("Error while parsing destination URL (full URL with a protocol scheme is required):", err)
 		return
@@ -88,8 +81,12 @@ func uploadToHaste(data string) {
 	fmt.Println(destination.JoinPath(jsonResponse.Key).String())
 }
 
+var returnRaw = flag.Bool("r", false, "Makes returned link point to raw content")
+
 func main() {
 	// Handle CLI arguments
+	hasteURL := flag.String("d", "https://haste.zneix.eu", "Hastebin server's URL to which data will be uploaded")
+	printVersion := flag.Bool("v", false, "Shows program version")
 	flag.Parse()
 
 	// Print version and quit
@@ -100,14 +97,14 @@ func main() {
 
 	// Upload from stdin if there's no file name provided
 	if len(flag.Args()) < 1 {
-		readStdin()
+		readStdin(*hasteURL)
 		return
 	}
 
 	// Otherwise, if arguments are provided use them as file names to upload
 	for _, file := range flag.Args() {
 		if file == "-" {
-			readStdin()
+			readStdin(*hasteURL)
 			continue
 		}
 
@@ -115,6 +112,6 @@ func main() {
 		if err != nil {
 			log.Fatalf("%s: Failed reading data from file: %s\n", os.Args[0], err)
 		}
-		uploadToHaste(string(data))
+		uploadToHaste(*hasteURL, string(data))
 	}
 }
