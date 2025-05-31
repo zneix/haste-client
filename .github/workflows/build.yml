@@ -12,17 +12,17 @@ jobs:
 
     strategy:
       matrix:
-        go: [1.18, 1.19]
+        go: [1.23, 1.24]
         os: [windows-latest, ubuntu-latest]
 
     steps:
       - name: Set up Go
-        uses: actions/setup-go@v3.3.0
+        uses: actions/setup-go@v5.5.0
         with:
           go-version: ${{ matrix.go }}
 
       - name: Checkout into project's git directory
-        uses: actions/checkout@v3.1.0
+        uses: actions/checkout@v4.2.2
 
       - name: Get dependencies
         run: go get -v -t -d ./...
@@ -36,7 +36,7 @@ jobs:
         run: go test -v ./...
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v4.6.2
         with:
           name: haste-go${{ matrix.go }}-${{ matrix.os }}
           path: build/haste
